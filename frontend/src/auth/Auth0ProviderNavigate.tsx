@@ -26,6 +26,7 @@ const Auth0ProviderNavigate = ({ children }: Props) => {
     navigate("/auth-callback");
   };
 
+  // This component wraps the Auth0Provider and provides a custom onRedirectCallback
   return (
     <Auth0Provider
       domain={domain}
