@@ -8,16 +8,20 @@ type Props = {
   children: React.ReactNode;
 };
 
+// This component wraps the Auth0Provider and provides a custom onRedirectCallback
 const Auth0ProviderNavigate = ({ children }: Props) => {
   const navigate = useNavigate();
   const domain = import.meta.env.VITE_AUTH0_DOMAIN;
   const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_AUTH0_CALLBACK_URL;
+  const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
 
-  if (!domain || !clientId || !redirectUri) {
+  // Check if the Auth0 configuration is missing
+  if (!domain || !clientId || !redirectUri || !audience) {
     throw new Error("Auth0 configuration missing");
   }
 
+  // This function is called after the user is redirected back to the application
   const onRedirectCallback = (appState?: AppState) => {
     navigate("/auth-callback");
   };
@@ -28,6 +32,7 @@ const Auth0ProviderNavigate = ({ children }: Props) => {
       clientId={clientId} 
       authorizationParams={{
         redirect_uri: redirectUri,
+        audience,
       }}
       onRedirectCallback={onRedirectCallback}
     >

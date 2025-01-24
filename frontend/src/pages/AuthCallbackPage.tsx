@@ -11,6 +11,7 @@ const AuthCallbackPage = () => {
   // This is a workaround to prevent the user from being created multiple times
   const hasCreatedUser = useRef(false);
 
+  // Create the user when the user is logged in
   useEffect(() => {
     if (user?.sub && user?.email && !hasCreatedUser.current) {
       createUser({ auth0Id: user.sub, email: user.email });
@@ -18,6 +19,8 @@ const AuthCallbackPage = () => {
     }
     navigate("/");
   }, [createUser, navigate, user]);
+
+  // This page should not be visible to the user
   return <>Loading...</>;
 };
 
