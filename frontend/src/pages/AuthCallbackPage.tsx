@@ -3,7 +3,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-const AuthCallbackPage = () => {
+type AuthCallbackPageProps = {};
+
+const AuthCallbackPage: React.FC<AuthCallbackPageProps> = () => {
   const navigate = useNavigate();
   const { user } = useAuth0();
   const { createUser } = useCreateMyUser();
