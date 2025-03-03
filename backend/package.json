@@ -22,7 +22,11 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+<<<<<<< HEAD
     "@types/jsonwebtoken": "^9.0.9",
+=======
+    "@types/jsonwebtoken": "^9.0.8",
+>>>>>>> origin/main
     "@types/node": "^22.9.3",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",

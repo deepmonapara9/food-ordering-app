@@ -30,7 +30,7 @@ const Auth0ProviderNavigate = ({ children }: Props) => {
   return (
     <Auth0Provider
       domain={domain}
-      clientId={clientId} 
+      clientId={clientId}
       authorizationParams={{
         redirect_uri: redirectUri,
         audience,
