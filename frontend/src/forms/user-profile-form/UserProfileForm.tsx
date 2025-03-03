@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -13,67 +13,66 @@ import {
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/LoadingButton";
 import { Button } from "@/components/ui/button";
+// import { User } from "@/types";
+// import { useEffect } from "react";
 
 // Define the schema for the form
 const formSchema = z.object({
   email: z.string().optional(),
   name: z.string().min(1, "Name is required"),
-  addressLine1: z.string().min(1, "Address is required"),
+  addressLine1: z.string().min(1, "Address Line 1 is required"),
   city: z.string().min(1, "City is required"),
   country: z.string().min(1, "Country is required"),
 });
 
-// Define the type of the form data
+// Define the type for the form data
 // infer is used to get the type of the schema
 type UserFormData = z.infer<typeof formSchema>;
 
-// Define the initial form data
-// This is used to reset the form
+// Define the props for the component
 type Props = {
-  onSave: (userProfileData: UserFormData) => void; // Function to save the form data
-  isLoading: boolean; // Flag to show loading state
+  onSave: (userProfileData: UserFormData) => void;
+  isLoading: boolean;
 };
 
-// Define the form component
+// Define the component UserProfileForm which takes onSave and isLoading as props and returns a Form component
 const UserProfileForm = ({ onSave, isLoading }: Props) => {
-  //   Create the form
+  // useForm hook is used to create a form with the schema and resolver
   const form = useForm<UserFormData>({
-    resolver: zodResolver(formSchema), //Use zod resolver to validate the form
+    resolver: zodResolver(formSchema),
   });
 
-  //   Handle form submit
+  // onSubmit function is called when the form is submitted
   return (
-    //  Use the Form component to handle form state
     <Form {...form}>
+      {/* Form component is used to wrap the form */}
       <form
         onSubmit={form.handleSubmit(onSave)}
         className="space-y-4 bg-gray-50 rounded-lg md:p-10"
       >
+        {/* this div contains the form fields */}
         <div>
           <h2 className="text-2xl font-bold">User Profile Form</h2>
-          {/* Show form description */}
           <FormDescription>
-            View and change your profile information here
+            View and update your user profile information below.
           </FormDescription>
         </div>
-        {/* Use FormField to handle form state for each input for email */}
+
+        {/* FormField component is used to create the form fields */}
         <FormField
           control={form.control}
           name="email"
-          //  Render the input field
           render={({ field }) => (
-            // Use FormItem to handle form state for each input
             <FormItem>
               <FormLabel>Email</FormLabel>
-              // Use FormControl to handle form state for each input
+              {/* This component is disabled and the value is fetched from the server */}
               <FormControl>
-                // Use Input component to render the input field
                 <Input {...field} disabled className="bg-white" />
               </FormControl>
             </FormItem>
           )}
         />
-        {/* Use FormField to handle form state for each input for name */}
+
         <FormField
           control={form.control}
           name="name"
@@ -87,7 +86,8 @@ const UserProfileForm = ({ onSave, isLoading }: Props) => {
             </FormItem>
           )}
         />
-        {/* Use FormField to handle form state for each input for address */}
+
+        {/* This div contains the address fields */}
         <div className="flex flex-col md:flex-row gap-4">
           <FormField
             control={form.control}
@@ -102,7 +102,7 @@ const UserProfileForm = ({ onSave, isLoading }: Props) => {
               </FormItem>
             )}
           />
-          {/* Use FormField to handle form state for each input for city */}
+
           <FormField
             control={form.control}
             name="city"
@@ -116,7 +116,7 @@ const UserProfileForm = ({ onSave, isLoading }: Props) => {
               </FormItem>
             )}
           />
-          {/* Use FormField to handle form state for each input for country */}
+
           <FormField
             control={form.control}
             name="country"
@@ -131,10 +131,14 @@ const UserProfileForm = ({ onSave, isLoading }: Props) => {
             )}
           />
         </div>
+
+        {/* If the form is loading, then show the LoadingButton component, else show the Button component
+        The Button component is used to submit the form */}
         {isLoading ? (
           <LoadingButton />
         ) : (
           <Button type="submit" className="bg-orange-500">
+            {/* {buttonText} */}
             Submit
           </Button>
         )}
@@ -143,4 +147,4 @@ const UserProfileForm = ({ onSave, isLoading }: Props) => {
   );
 };
 
-export type UserFormData = z.infer<typeof formSchema>;
+export default UserProfileForm;
