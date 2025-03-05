@@ -1,17 +1,16 @@
+import { useUpdateMyUser } from '@/api/MyUserAPI';
 import UserProfileForm from '@/forms/user-profile-form/UserProfileForm'
-import { UserFormData } from '@/forms/user-profile-form/UserProfileForm';
 
 const UserProfilePage = () => {
-  const handleSave = async (formData: UserFormData) => {
-    // Handle the form submission here
-    console.log(formData);
-  };
+  const { updateUser, isLoading} = useUpdateMyUser();
+
+  const handleSave = async (formData: any) => {
+    console.log("Saving user with data:", formData); // ✅ Debugging log
+    await updateUser(formData);
+  }
 
   return (
-    <UserProfileForm 
-      onSave={handleSave}
-      isLoading={false}
-    />
+    <UserProfileForm onSave={updateUser} isLoading={isLoading}/>
   );
 };
 
