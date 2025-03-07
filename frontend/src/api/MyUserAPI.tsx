@@ -1,9 +1,46 @@
+import { User } from "@/type";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
 
 // Get the API base URL from the environment
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+// Define the useGetMyUser hook which returns the user data which will show in the profile page/ it will get the default user data which is stored in the database
+export const useGetMyUser = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const getMyUserRequest = async (): Promise<User> => {
+    const accessToken = await getAccessTokenSilently();
+    // Basically this is the endpoint to get the user data from the API(backend) which is created MyUserRoute.ts
+    const response = await fetch(`${API_BASE_URL}/api/my/user`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to get user");
+    }
+
+    return response.json();
+  };
+
+  // useQuery hook is used to make the API request to get the user data
+  const {
+    data: currentUser,
+    isLoading,
+    error,
+  } = useQuery("fetchCurrentUser", getMyUserRequest);
+
+  if(error){
+    toast.error(error.toString());
+  }
+
+  return { currentUser, isLoading };
+};
 
 // Define the type for the user data returned by the API
 type CreateUserRequest = {
@@ -91,11 +128,11 @@ export const useUpdateMyUser = () => {
   } = useMutation(updateMyUserRequest);
 
   // If there is an error, show a toast message with the error otherwise show a success message
-  if(isSuccess) {
+  if (isSuccess) {
     toast.success("User updated successfully");
   }
 
-  if(error) {
+  if (error) {
     toast.error(error.toString());
     reset();
   }

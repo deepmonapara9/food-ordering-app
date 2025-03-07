@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/LoadingButton";
 import { Button } from "@/components/ui/button";
+import { User } from "@auth0/auth0-react";
+import { useEffect } from "react";
 // import { User } from "@/types";
 // import { useEffect } from "react";
 
@@ -31,16 +33,23 @@ type UserFormData = z.infer<typeof formSchema>;
 
 // Define the props for the component
 type Props = {
+  currentUser: User;
   onSave: (userProfileData: UserFormData) => void;
   isLoading: boolean;
 };
 
 // Define the component UserProfileForm which takes onSave and isLoading as props and returns a Form component
-const UserProfileForm = ({ onSave, isLoading }: Props) => {
+const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
   // useForm hook is used to create a form with the schema and resolver
   const form = useForm<UserFormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: currentUser,
   });
+
+  // useEffect hook is used to reset the form when the currentUser changes or when the form changes
+  useEffect(() => {
+    form.reset(currentUser);
+  }, [currentUser, form]);
 
   // onSubmit function is called when the form is submitted
   return (

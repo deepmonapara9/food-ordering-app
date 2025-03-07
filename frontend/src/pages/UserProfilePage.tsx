@@ -1,11 +1,25 @@
-import { useUpdateMyUser } from '@/api/MyUserAPI';
-import UserProfileForm from '@/forms/user-profile-form/UserProfileForm'
+import { useGetMyUser, useUpdateMyUser } from "@/api/MyUserAPI";
+import UserProfileForm from "@/forms/user-profile-form/UserProfileForm";
 
 const UserProfilePage = () => {
-  const { updateUser, isLoading} = useUpdateMyUser();
+  const { currentUser, isLoading: isGetLoading } = useGetMyUser();
+  const { updateUser, isLoading: isUpdateLoading } = useUpdateMyUser();
+
+  if (isGetLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // If the user is not found, display a message to the user
+  if (!currentUser) {
+    return <div>User not found</div>;
+  }
 
   return (
-    <UserProfileForm onSave={updateUser} isLoading={isLoading}/>
+    <UserProfileForm
+      currentUser={currentUser}
+      onSave={updateUser}
+      isLoading={isUpdateLoading}
+    />
   );
 };
 

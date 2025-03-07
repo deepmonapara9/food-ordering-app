@@ -6,6 +6,7 @@ import { validateMyUserRequest } from "../middleware/validation";
 const router = express.Router();
 
 // This route is protected by the jwtCheck middleware
+router.get('/', jwtCheck, jwtParse, MyUserController.getCurrentUser);
 router.post("/", jwtCheck, MyUserController.createCurrentUser);
 router.put(
   "/",

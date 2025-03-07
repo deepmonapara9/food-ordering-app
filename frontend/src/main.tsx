@@ -7,6 +7,7 @@ import Auth0ProviderNavigate from "./auth/Auth0ProviderNavigate";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Toaster } from "sonner";
 
+// Create a new QueryClient instance for the app with default options
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
