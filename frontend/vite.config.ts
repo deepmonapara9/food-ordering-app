@@ -1,9 +1,11 @@
-import path from "path";
+// / <reference types="node" />
+
+import * as path from "path";
 import { fileURLToPath } from "url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-// Convert `import.meta.url` to a file path
+// Convert `import.meta.url` properly
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
