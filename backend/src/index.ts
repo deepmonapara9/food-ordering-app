@@ -13,6 +13,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// This is a health check endpoint which can be used to check if the server is running for the render.com
+app.get("/health", async (req: Request, res: Response) => {
+  res.send({ message: "health OK!" });
+});
+
 // /api/my/user
 app.use("/api/my/user", myUserRoute);
 
