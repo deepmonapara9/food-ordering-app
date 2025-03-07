@@ -11,7 +11,7 @@ const UserProfilePage = () => {
 
   // If the user is not found, display a message to the user
   if (!currentUser) {
-    return <div>User not found</div>;
+    return <div>Unable to load the user profile</div>;
   }
 
   return (
