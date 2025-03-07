@@ -23,7 +23,7 @@ const Auth0ProviderNavigate = ({ children }: Props) => {
 
   // This function is called after the user is redirected back to the application
   const onRedirectCallback = (appState?: AppState) => {
-    navigate("/auth-callback");
+    navigate(appState?.returnTo || "/auth-callback");
   };
 
   // This component wraps the Auth0Provider and provides a custom onRedirectCallback
