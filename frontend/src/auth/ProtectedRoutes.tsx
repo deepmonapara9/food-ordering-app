@@ -6,6 +6,7 @@ import { Navigate, Outlet } from "react-router-dom";
 // If the user is not authenticated, it will redirect them to the login page.
 const ProtectedRoutes = () => {
   const { isAuthenticated } = useAuth0();
+  console.log("Is Authenticated:", isAuthenticated);
 
   // If the user is authenticated, render the children (nested routes)
   return isAuthenticated ? <Outlet /> : <Navigate to="/" replace />;

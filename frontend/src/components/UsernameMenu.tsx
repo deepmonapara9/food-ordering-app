@@ -21,14 +21,24 @@ const UsernameMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
+          <Link
+            to="/manage-restauraunt"
+            className="font-bold hover:text-orange-500"
+          >
+            Manage Restaurant
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
           <Link to="/user-profile" className="font-bold hover:text-orange-500">
             User Profile
           </Link>
-        </DropdownMenuItem> 
+        </DropdownMenuItem>
         <Separator />
         <DropdownMenuItem>
           <Button
-            onClick={() => logout({logoutParams: { returnTo: window.location.origin },})}
+            onClick={() =>
+              logout({ logoutParams: { returnTo: window.location.origin } })
+            }
             className="flex flex-1 font-bold bg-orange-500"
           >
             Log Out
