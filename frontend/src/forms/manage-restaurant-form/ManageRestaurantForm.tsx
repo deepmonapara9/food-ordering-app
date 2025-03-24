@@ -50,7 +50,7 @@ const formSchema = z.object({
 // });
 
 // Infer the type of the form data from the schema using the `infer` method of the schema
-type restaurantFormData = z.infer<typeof formSchema>;
+type RestaurantFormData = z.infer<typeof formSchema>;
 
 type Props = {
   onSave: (restaurantFormData: FormData) => void;
@@ -58,7 +58,7 @@ type Props = {
 };
 
 const ManageRestaurantForm = ({ onSave, isLoading }: Props) => {
-  const form = useForm<restaurantFormData>({
+  const form = useForm<RestaurantFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       cuisines: [],
@@ -67,8 +67,38 @@ const ManageRestaurantForm = ({ onSave, isLoading }: Props) => {
   });
 
   // Handle the form submission
-  const onSubmit = (formDataJson: restaurantFormData) => {
-    // onSave(formDataJson);
+  const onSubmit = (formDataJson: RestaurantFormData) => {
+    // Convert the form data to a FormData object
+    const formData = new FormData();
+
+    // Append the form data to the FormData object using the append method
+    formData.append("restaurantName", formDataJson.restaurantName);
+    formData.append("city", formDataJson.city);
+    formData.append("country", formDataJson.country);
+    formData.append(
+      "deliveryPrice",
+      (formDataJson.deliveryPrice * 100).toString() // Price in paise (Indian currency)
+    );
+    formData.append(
+      "estimatedDeliveryTime",
+      formDataJson.estimatedDeliveryTime.toString()
+    );
+    formDataJson.cuisines.forEach((cuisine, index) => {
+      formData.append(`cuisines[${index}]`, cuisine);
+    });
+    formDataJson.menuItems.forEach((menuItem, index) => {
+      formData.append(`menuItems[${index}][name]`, menuItem.name);
+      formData.append(
+        `menuItems[${index}][price]`,
+        (menuItem.price * 100).toString()
+      );
+    });
+    // this is used to check if the imageFile is present in the form data
+    if (formDataJson.imageFile) {
+      formData.append("imageFile", formDataJson.imageFile);
+    }
+
+    onSave(formData);
   };
 
   return (
