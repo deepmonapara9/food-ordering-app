@@ -20,6 +20,9 @@ const upload = multer({
 });
 
 // api/my/restaurant - This route will return the restaurant details of the logged in user
+router.get("/", jwtCheck, jwtParse, MyRestaurantController.getMyRestaurant);
+
+// api/my/restaurant - This route will return the restaurant details of the logged in user
 router.post(
   "/",
   upload.single("imageFile"),

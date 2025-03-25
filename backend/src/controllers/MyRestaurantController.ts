@@ -3,6 +3,21 @@ import Restaurant from "../models/restaurant";
 import cloudinary from "cloudinary";
 import mongoose from "mongoose";
 
+// This will get the restaurant details of the logged in user and return it in the response
+const getMyRestaurant = async (req: Request, res: Response) => {
+  try {
+    const restaurant = await Restaurant.findOne({ user: req.userId });
+    if (!restaurant) {
+      res.status(404).json({ message: "Restaurant not found..." });
+      return;
+    }
+    res.json(restaurant);
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: "Error fetching restaurant..." });
+  }
+};
+
 // In this it will create restaurant for the logged in user but for only once if it is already created then it will update the restaurant details or just return the restaurant details
 const createMyRestaurant = async (req: Request, res: Response) => {
   try {
@@ -39,4 +54,4 @@ const createMyRestaurant = async (req: Request, res: Response) => {
   }
 };
 
-export default { createMyRestaurant };
+export default { createMyRestaurant, getMyRestaurant };
