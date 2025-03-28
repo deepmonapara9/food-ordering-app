@@ -28,21 +28,12 @@ const createMyRestaurant = async (req: Request, res: Response) => {
       return;
     }
 
-    // This will get the image file from the request
-    const image = req.file as Express.Multer.File;
-
-    // This will convert the image to base64 format
-    const base64Image = Buffer.from(image.buffer).toString("base64");
-
-    // This will create the data URI for the image which will be used to display the image on the frontend
-    const dataURI = `data:${image.mimetype};base64,${base64Image}`;
-
-    // This will upload the image to the cloudinary server
-    const uploadResponse = await cloudinary.v2.uploader.upload(dataURI);
+    // this is called from the uploadImage function to upload the image to the cloudinary server
+    const imageUrl = await uploadImage(req.file as Express.Multer.File);
 
     // This will create the restaurant object with the details provided in the request
     const restaurant = new Restaurant(req.body);
-    restaurant.imageUrl = uploadResponse.url;
+    restaurant.imageUrl = imageUrl;
     restaurant.user = new mongoose.Types.ObjectId(req.userId);
     restaurant.lastUpdated = new Date();
     await restaurant.save();
@@ -54,4 +45,48 @@ const createMyRestaurant = async (req: Request, res: Response) => {
   }
 };
 
-export default { createMyRestaurant, getMyRestaurant };
+// This will update the restaurant details of the logged in user
+const updateMyRestaurant = async (req: Request, res: Response) => {
+  try {
+    // this will find the restaurant of the logged in user
+    const restaurant = await Restaurant.findOne({ user: req.userId });
+
+    if (!restaurant) {
+      res.status(404).json({ message: "Restaurant not found..." });
+      return;
+    }
+
+    // Update the restaurant details with the values provided in the request body
+    restaurant.restaurantName = req.body.restaurantName;
+    restaurant.city = req.body.city;
+    restaurant.country = req.body.country;
+    restaurant.deliveryPrice = req.body.deliveryPrice;
+    restaurant.estimatedDeliveryTime = req.body.estimatedDeliveryTime;
+    restaurant.cuisines = req.body.cuisines;
+    restaurant.menuItems = req.body.menuItems;
+    restaurant.lastUpdated = new Date();
+
+    // If the image is provided in the request then upload the image to the cloudinary server and update the image URL in the restaurant object
+    if (req.file) {
+      const imageUrl = await uploadImage(req.file as Express.Multer.File);
+      restaurant.imageUrl = imageUrl;
+    }
+
+    await restaurant.save();
+    res.status(200).send(restaurant);
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: "Error updating restaurant..." });
+  }
+};
+
+// This function will upload the image to the cloudinary server and turns the image into a URL and it is used in the createMyRestaurant function and in the updateMyRestaurant function
+const uploadImage = async (file: Express.Multer.File) => {
+  const image = file;
+  const base64Image = Buffer.from(image.buffer).toString("base64");
+  const dataURI = `data:${image.mimetype};base64,${base64Image}`;
+  const uploadResponse = await cloudinary.v2.uploader.upload(dataURI);
+  return uploadResponse.url;
+};
+
+export default { createMyRestaurant, getMyRestaurant, updateMyRestaurant };
