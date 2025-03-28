@@ -1,3 +1,4 @@
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
   FormControl,
   FormDescription,
@@ -9,7 +10,9 @@ import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 
 export default function ImageSection() {
-  const { control } = useFormContext();
+  const { control, watch } = useFormContext();
+
+  const existingImageUrl = watch("imageUrl");
 
   return (
     <div className="space-y-2">
@@ -22,14 +25,15 @@ export default function ImageSection() {
       </div>
 
       <div className="flex flex-col gap-8 md:w-[50%]">
-        {/* {existingImageUrl && (
+        {/* Check if the existing image URL is present and display the image if it exists */}
+        {existingImageUrl && (
           <AspectRatio ratio={16 / 9}>
             <img
               src={existingImageUrl}
               className="rounded-md object-cover h-full w-full"
             />
           </AspectRatio>
-        )} */}
+        )}
         <FormField
           control={control}
           name="imageFile"
@@ -43,7 +47,7 @@ export default function ImageSection() {
                   // Update the field value with the selected file when a new file is selected
                   onChange={(event) =>
                     field.onChange(
-                     // Check if the event target contains files and set the field value to the first file
+                      // Check if the event target contains files and set the field value to the first file
                       event.target.files ? event.target.files[0] : null
                     )
                   }

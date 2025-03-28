@@ -34,7 +34,10 @@ const Auth0ProviderNavigate = ({ children }: Props) => {
       authorizationParams={{
         redirect_uri: redirectUri,
         audience,
+        scope: "openid profile email offline_access", 
       }}
+      cacheLocation="localstorage" 
+      useRefreshTokens={true} 
       onRedirectCallback={onRedirectCallback}
     >
       {children}
