@@ -5,6 +5,7 @@ import { Form, FormControl, FormField, FormItem } from "./ui/form";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useEffect } from "react";
 
 // this will be used to validate the form data if the user directs clicks the search button
 // and the input is empty
@@ -18,12 +19,13 @@ type Props = {
   onSubmit: (formData: SearchForm) => void;
   placeHolder: string;
   onReset?: () => void;
+  searchQuery?: string;
 };
 
 // This is the schema for the form data
 export type SearchForm = z.infer<typeof formSchema>;
 
-const SearchBar = ({ onSubmit, onReset, placeHolder }: Props) => {
+const SearchBar = ({ onSubmit, onReset, placeHolder, searchQuery }: Props) => {
   // useForm is a custom hook that manages the form state and validation
   const form = useForm<SearchForm>({
     resolver: zodResolver(formSchema),
@@ -31,6 +33,11 @@ const SearchBar = ({ onSubmit, onReset, placeHolder }: Props) => {
       searchQuery: "",
     },
   });
+
+  // this effect will be used to set the default value of the form when the component mounts
+  useEffect(() => {
+    form.reset({ searchQuery });
+  }, []);
 
   // this effect will be used to reset the form when the component mounts
   const handleReset = () => {
@@ -72,20 +79,18 @@ const SearchBar = ({ onSubmit, onReset, placeHolder }: Props) => {
           )}
         />
 
-        {form.formState.isDirty && (
-          <Button
-            onClick={handleReset}
-            type="button"
-            variant="outline"
-            className="rounded-full"
-          >
-            Clear
-          </Button>
-        )}
-
         <Button
-          type="submit"
-          className="rounded-full bg-orange-500 text-white">Search</Button>
+          onClick={handleReset}
+          type="button"
+          variant="outline"
+          className="rounded-full"
+        >
+          Reset
+        </Button>
+
+        <Button type="submit" className="rounded-full bg-orange-500 text-white">
+          Search
+        </Button>
       </form>
     </Form>
   );
