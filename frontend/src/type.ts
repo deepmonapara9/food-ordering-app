@@ -2,32 +2,42 @@
 
 // The useCreateMyUser hook is defined to make a POST request to the API to create a user. The useUpdateMyUser hook is defined to make a PUT request to the API to update a user. The useCreateMyUser hook uses the useMutation hook from the react-query library to make the API request. The useUpdateMyUser hook uses the useMutation hook from the react-query library to make the API request. The useCreateMyUser hook returns an object with the createUser function, isLoading, isError, and isSuccess properties. The useUpdateMyUser hook returns an object with the updateUser function, isLoading, isError, and isSuccess properties.
 export type User = {
-   _id: string;
-   email: string;
-   name: string;
-   addressLine1: string;
-   city: string;
-   country: string;
-}
+  _id: string;
+  email: string;
+  name: string;
+  addressLine1: string;
+  city: string;
+  country: string;
+};
 
 // Define the type for the user data
 export type MenuItem = {
-   _id: string;
-   name: string;
-   price: number;
-}
+  _id: string;
+  name: string;
+  price: number;
+};
 
 // Define the type for the restaurant data
 export type Restaurant = {
-   _id: string;
-   user: string;
-   restaurantName: string;
-   city: string;
-   country: string;
-   deliveryPrice: number;
-   estimatedDeliveryTime: number;
-   cuisines: string[];
-   menuItems: MenuItem[];
-   imageUrl: string;
-   lastUpdated: string
-}
+  _id: string;
+  user: string;
+  restaurantName: string;
+  city: string;
+  country: string;
+  deliveryPrice: number;
+  estimatedDeliveryTime: number;
+  cuisines: string[];
+  menuItems: MenuItem[];
+  imageUrl: string;
+  lastUpdated: string;
+};
+
+// Define the type for the restaurant data that is returned from the API
+export type RestaurantSearchResponse = {
+  data: Restaurant[];
+  pagination: {
+    total: number;
+    page: number;
+    pages: number;
+  };
+};
