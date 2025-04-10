@@ -1,4 +1,5 @@
 import { useSearchRestaurants } from "@/api/RestaurantAPI";
+import PaginationSelector from "@/components/PaginationSelector";
 import SearchBar, { SearchForm } from "@/components/SearchBar";
 import SearchResultCard from "@/components/SearchResultCard";
 import SearchResultInfo from "@/components/SearchResultInfo";
@@ -8,6 +9,7 @@ import { useParams } from "react-router-dom";
 // SearchPage component is responsible for displaying the search results of restaurants based on the city parameter from the URL.
 export type SearchState = {
   searchQuery: string;
+  page: number;
 };
 
 const SearchPage = () => {
@@ -15,17 +17,28 @@ const SearchPage = () => {
   // searchState is the state variable that holds the search query
   const [searchState, setSearchState] = useState<SearchState>({
     searchQuery: "",
+    page: 1,
   });
   // useParams is a hook that returns an object of key/value pairs of the dynamic params from the current URL that were matched by <Route path>
   const { city } = useParams();
   // useSearchRestaurants is a custom hook that fetches data from the API
   const { results, isLoading } = useSearchRestaurants(searchState, city);
 
+  // this will be used to change the page according to the pagination
+  // setPage is a function that updates the page state variable
+  const setPage = (page: number) => {
+    setSearchState((prevState) => ({
+      ...prevState,
+      page,
+    }));
+  };
+
   // setSearchState is a function that updates the searchState state variable
   const setSearchQuery = (searchFormData: SearchForm) => {
     setSearchState((prevState) => ({
       ...prevState,
       searchQuery: searchFormData.searchQuery,
+      page: 1, // reset page to 1 when search query changes
     }));
   };
 
@@ -34,6 +47,7 @@ const SearchPage = () => {
     setSearchState((prevState) => ({
       ...prevState,
       searchQuery: "",
+      page: 1, // reset page to 1 when search query is reset
     }));
   };
 
@@ -66,11 +80,11 @@ const SearchPage = () => {
         {results.data.map((restaurant) => (
           <SearchResultCard restaurant={restaurant} />
         ))}
-        {/* <PaginationSelector
+        <PaginationSelector
           page={results.pagination.page}
           pages={results.pagination.pages}
           onPageChange={setPage}
-        /> */}
+        />
       </div>
     </div>
   );

@@ -10,6 +10,8 @@ export const useSearchRestaurants = (
   // this params is used to send the search query to the backend 
   const params = new URLSearchParams();
   params.set("searchQuery", searchState.searchQuery);
+  // this is the page number that will be used for pagination
+  params.set("page", searchState.page.toString());
 
   // this is a custom hook that will be used to search for restaurants
   const createSearchRequest = async (): Promise<RestaurantSearchResponse> => {
