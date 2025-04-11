@@ -2,7 +2,6 @@ import { useGetRestaurant } from "@/api/RestaurantAPI";
 import MenuItem from "@/components/MenuItem";
 import RestaurantInfo from "@/components/RestaurantInfo";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Card, CardFooter } from "@/components/ui/card";
 import { useParams } from "react-router-dom";
 
 const DetailPage = () => {
