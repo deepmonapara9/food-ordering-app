@@ -12,6 +12,8 @@ export const useSearchRestaurants = (
   params.set("searchQuery", searchState.searchQuery);
   // this is the page number that will be used for pagination
   params.set("page", searchState.page.toString());
+  // this is the selected cuisines that will be used for filtering
+  params.set("selectedCuisines", searchState.selectedCuisines.join(","));
 
   // this is a custom hook that will be used to search for restaurants
   const createSearchRequest = async (): Promise<RestaurantSearchResponse> => {

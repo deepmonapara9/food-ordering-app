@@ -1,4 +1,5 @@
 import { useSearchRestaurants } from "@/api/RestaurantAPI";
+import CuisineFilter from "@/components/CuisineFilter";
 import PaginationSelector from "@/components/PaginationSelector";
 import SearchBar, { SearchForm } from "@/components/SearchBar";
 import SearchResultCard from "@/components/SearchResultCard";
@@ -10,6 +11,7 @@ import { useParams } from "react-router-dom";
 export type SearchState = {
   searchQuery: string;
   page: number;
+  selectedCuisines: string[];
 };
 
 const SearchPage = () => {
@@ -18,11 +20,26 @@ const SearchPage = () => {
   const [searchState, setSearchState] = useState<SearchState>({
     searchQuery: "",
     page: 1,
+    selectedCuisines: [],
   });
+
+  // isExpanded is a state variable that determines whether the cuisine filter is expanded or not
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
   // useParams is a hook that returns an object of key/value pairs of the dynamic params from the current URL that were matched by <Route path>
   const { city } = useParams();
   // useSearchRestaurants is a custom hook that fetches data from the API
   const { results, isLoading } = useSearchRestaurants(searchState, city);
+
+  // setSelectedCuisines is a function that updates the selectedCuisines state variable
+  // selectedCuisines is an array of strings that holds the selected cuisines
+  const setSelectedCuisines = (selectedCuisines: string[]) => {
+    setSearchState((prevState) => ({
+      ...prevState,
+      selectedCuisines,
+      page: 1,
+    }));
+  };
 
   // this will be used to change the page according to the pagination
   // setPage is a function that updates the page state variable
@@ -61,7 +78,14 @@ const SearchPage = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-5">
-      <div id="cuisines-list">insert cuisines list here</div>
+      <div id="cuisines-list">
+        <CuisineFilter
+          selectedCuisines={searchState.selectedCuisines}
+          onChange={setSelectedCuisines}
+          isExpanded={isExpanded}
+          onExpandedClick={() => setIsExpanded((prev) => !prev)}
+        />
+      </div>
       <div id="main-content" className="flex flex-col gap-5">
         <SearchBar
           searchQuery={searchState.searchQuery}
