@@ -4,6 +4,7 @@ import PaginationSelector from "@/components/PaginationSelector";
 import SearchBar, { SearchForm } from "@/components/SearchBar";
 import SearchResultCard from "@/components/SearchResultCard";
 import SearchResultInfo from "@/components/SearchResultInfo";
+import SortOptionDropdown from "@/components/SortOptionDropdown";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -12,6 +13,7 @@ export type SearchState = {
   searchQuery: string;
   page: number;
   selectedCuisines: string[];
+  sortOption: string;
 };
 
 const SearchPage = () => {
@@ -21,6 +23,7 @@ const SearchPage = () => {
     searchQuery: "",
     page: 1,
     selectedCuisines: [],
+    sortOption: "bestMatch",
   });
 
   // isExpanded is a state variable that determines whether the cuisine filter is expanded or not
@@ -30,6 +33,15 @@ const SearchPage = () => {
   const { city } = useParams();
   // useSearchRestaurants is a custom hook that fetches data from the API
   const { results, isLoading } = useSearchRestaurants(searchState, city);
+
+  // setSortOption is a function that updates the sortOption state variable
+  const setSortOption = (sortOption: string) => {
+    setSearchState((prevState) => ({
+      ...prevState,
+      sortOption,
+      page: 1,
+    }));
+  };
 
   // setSelectedCuisines is a function that updates the selectedCuisines state variable
   // selectedCuisines is an array of strings that holds the selected cuisines
@@ -95,10 +107,10 @@ const SearchPage = () => {
         />
         <div className="flex justify-between flex-col gap-3 lg:flex-row">
           <SearchResultInfo total={results.pagination.total} city={city} />
-          {/* <SortOptionDropdown
+          <SortOptionDropdown
             sortOption={searchState.sortOption}
             onChange={(value) => setSortOption(value)}
-          /> */}
+          />
         </div>
         {/* This section displays the list of restaurants */}
         {results.data.map((restaurant) => (
