@@ -1,6 +1,26 @@
 import { Request, Response } from "express";
 import Restaurant from "../models/restaurant";
 
+// this function will give the details of the restaurant based on the restaurantId
+const getRestaurant = async (req: Request, res: Response) => {
+  try {
+    // get the restaurantId from the request parameters
+    const restaurantId = req.params.restaurantId;
+    // check if the restaurantId is a valid string and not empty
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (!restaurant) {
+      res.status(404).json({ message: "restaurant not found" });
+      return;
+    }
+
+    res.json(restaurant);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "something went wrong" });
+  }
+};
+
+// this function will search the restaurants based on the city name and the search query
 const searchRestaurants = async (req: Request, res: Response) => {
   try {
     // get the city from the request parameters
@@ -88,4 +108,5 @@ const searchRestaurants = async (req: Request, res: Response) => {
 
 export default {
   searchRestaurants,
+  getRestaurant,
 };

@@ -1,13 +1,39 @@
 import { SearchState } from "@/pages/SearchPage";
-import { RestaurantSearchResponse } from "@/type";
+import { Restaurant, RestaurantSearchResponse } from "@/type";
 import { useQuery } from "react-query";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+// this function will fetch the restaurant details based on the restaurantId
+export const useGetRestaurant = (restaurantId?: string) => {
+  const getRestaurantByIdRequest = async (): Promise<Restaurant> => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/restaurant/${restaurantId}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to get restaurant");
+    }
+
+    return response.json();
+  };
+
+  // this is a react-query hook that will be used to fetch the data from the backend
+  const { data: restaurant, isLoading } = useQuery(
+    "fetchRestaurant",
+    getRestaurantByIdRequest,
+    {
+      enabled: !!restaurantId,
+    }
+  );
+
+  return { restaurant, isLoading };
+};
 
 export const useSearchRestaurants = (
   searchState: SearchState,
   city?: string
 ) => {
-  // this params is used to send the search query to the backend 
+  // this params is used to send the search query to the backend
   const params = new URLSearchParams();
   params.set("searchQuery", searchState.searchQuery);
   // this is the page number that will be used for pagination
@@ -19,7 +45,7 @@ export const useSearchRestaurants = (
   const createSearchRequest = async (): Promise<RestaurantSearchResponse> => {
     // here we are checking the search endpoint with the backend
     const response = await fetch(
-      `${API_BASE_URL}/api/restaurant/search/${city}?${params.toString()}`,
+      `${API_BASE_URL}/api/restaurant/search/${city}?${params.toString()}`
     );
 
     if (!response.ok) {
