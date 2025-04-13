@@ -29,7 +29,7 @@ const formSchema = z.object({
 
 // Define the type for the form data
 // infer is used to get the type of the schema
-type UserFormData = z.infer<typeof formSchema>;
+export type UserFormData = z.infer<typeof formSchema>;
 
 // Define the props for the component
 type Props = {

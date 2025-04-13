@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import type { MenuItem as MenuItemType } from "@/type";
 import CheckoutButton from "@/components/CheckoutButton";
+import { UserFormData } from "@/forms/user-profile-form/UserProfileForm";
 
 // Define the type for the cart item
 export type CartItem = {
@@ -25,7 +26,7 @@ const DetailPage = () => {
   // this is used to manage the cart items
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     const storedCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
-    return storedCartItems ? JSON.parse(storedCartItems) : [];  
+    return storedCartItems ? JSON.parse(storedCartItems) : [];
   });
 
   // this is used to update the cart in the real time
@@ -86,6 +87,10 @@ const DetailPage = () => {
     });
   };
 
+  const onCheckout = (userFormData: UserFormData) => {
+    console.log("userFormData", userFormData);
+  }
+
   if (isLoading || !restaurant) {
     return <div>Loading...</div>;
   }
@@ -117,7 +122,10 @@ const DetailPage = () => {
               removeFromCart={removeFromCart}
             />
             <CardFooter>
-              <CheckoutButton />
+              <CheckoutButton
+                disabled={cartItems.length === 0}
+                onCheckout={onCheckout}
+              />
             </CardFooter>
           </Card>
         </div>
