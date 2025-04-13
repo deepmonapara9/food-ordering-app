@@ -3,10 +3,11 @@ import MenuItem from "@/components/MenuItem";
 import OrderSummary from "@/components/OrderSummary";
 import RestaurantInfo from "@/components/RestaurantInfo";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Card } from "@/components/ui/card";
+import { Card, CardFooter } from "@/components/ui/card";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import type { MenuItem as MenuItemType } from "@/type";
+import CheckoutButton from "@/components/CheckoutButton";
 
 // Define the type for the cart item
 export type CartItem = {
@@ -21,7 +22,11 @@ const DetailPage = () => {
   const { restaurant, isLoading } = useGetRestaurant(restaurantId);
   // here we declare the useState hook to manage the cart items and setCartItems function to update the cart items and we gave it an initial value of an empty array
   // this is the state that will be used to manage the cart items
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  // this is used to manage the cart items
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    const storedCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
+    return storedCartItems ? JSON.parse(storedCartItems) : [];  
+  });
 
   // this is used to update the cart in the real time
   const addToCart = (menuItem: MenuItemType) => {
@@ -98,7 +103,10 @@ const DetailPage = () => {
           <RestaurantInfo restaurant={restaurant} />
           <span className="text-2xl font-bold tracking-tight">Menu</span>
           {restaurant.menuItems.map((menuItem) => (
-            <MenuItem menuItem={menuItem} addToCart={() => addToCart(menuItem)} />
+            <MenuItem
+              menuItem={menuItem}
+              addToCart={() => addToCart(menuItem)}
+            />
           ))}
         </div>
         <div>
@@ -108,6 +116,9 @@ const DetailPage = () => {
               cartItems={cartItems}
               removeFromCart={removeFromCart}
             />
+            <CardFooter>
+              <CheckoutButton />
+            </CardFooter>
           </Card>
         </div>
       </div>
