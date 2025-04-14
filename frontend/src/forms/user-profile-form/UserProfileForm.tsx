@@ -36,10 +36,18 @@ type Props = {
   currentUser: User;
   onSave: (userProfileData: UserFormData) => void;
   isLoading: boolean;
+  title?: string;
+  buttonText?: string;
 };
 
 // Define the component UserProfileForm which takes onSave and isLoading as props and returns a Form component
-const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
+const UserProfileForm = ({
+  onSave,
+  isLoading,
+  currentUser,
+  title = "User Profile",
+  buttonText = "Submit",
+}: Props) => {
   // useForm hook is used to create a form with the schema and resolver
   const form = useForm<UserFormData>({
     resolver: zodResolver(formSchema),
@@ -61,7 +69,7 @@ const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
       >
         {/* this div contains the form fields */}
         <div>
-          <h2 className="text-2xl font-bold">User Profile Form</h2>
+          <h2 className="text-2xl font-bold">{title}</h2>
           <FormDescription>
             View and update your user profile information below.
           </FormDescription>
@@ -147,8 +155,7 @@ const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
           <LoadingButton />
         ) : (
           <Button type="submit" className="bg-orange-500">
-            {/* {buttonText} */}
-            Submit
+            {buttonText}
           </Button>
         )}
       </form>
